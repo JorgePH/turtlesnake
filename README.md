@@ -76,8 +76,6 @@ Cada tortuga lanza un nodo nuevo con el broadcaster de su tf. El nodo *listener*
 
 En la siguiente imagen se puede ver un ejemplo de los nodos activos y sus topics cuando hay un total de cinco tortugas.
 
-```
 <p align="center">
-  <img src="https://https://github.com/JorgePH/turtlesnake/blob/master/images/rosgraph_v3.0.svg" width="400">
+  <img src="https://github.com/JorgePH/turtlesnake/blob/master/images/rosgraph_v3.0.svg" width="800">
 </p>
-```
