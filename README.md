@@ -2,6 +2,10 @@
 
 El juego está hecho usando ROS Melodic sobre Ubuntu 18.04. Si tenéis algún error de compatibilidad me decís!
 
+## Instrucciones
+
+### V1.0
+
 Para ejecutar la versión 1.0 sólo hace falta seguir los requisitos de la guía. Una vez clonado el repositorio, y habiendo hecho source sobre la instalación de ROS:
 
 ```
@@ -33,5 +37,14 @@ Para empezar el juego, ejecutar en otra ventana y con source sobre la instalaci�
 rosservice call /start_turtlesim_snake
 ```
 
-Que inicia el juego de snake
+Que inicia el juego de snake.
 
+### V2.0
+
+Esta versión acepta argumentos en el service *start_turtlesim_snake* de la forma [x y theta].
+
+Sustituir la llamada al servicio anterior por:
+
+`rosservice call /start_turtlesim_snake x y theta`
+
+Donde *x*, *y* y *theta* son los valores de posición y rotación que se le quiere dar a la segunda tortuga.
