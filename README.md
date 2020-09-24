@@ -41,6 +41,13 @@ Que inicia el juego de snake.
 
 ### V2.0
 
+```
+% Cambiar al tag v2.0
+git checkout v2.0
+
+% Borrar las carpetas devel y build y recompilar
+```
+
 Esta versión acepta argumentos en el service *start_turtlesim_snake* de la forma [x y theta].
 
 Sustituir la llamada al servicio anterior por:
