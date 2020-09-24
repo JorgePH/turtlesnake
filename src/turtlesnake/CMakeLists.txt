@@ -10,6 +10,8 @@ project(turtlesnake)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   turtlesim
+  message_generation
+  std_srvs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -67,10 +69,11 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  std_msgs  # Or other packages containing msgs
+  std_srvs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -104,7 +107,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES turtlesnake
-#  CATKIN_DEPENDS rospy turtlesim
+#  CATKIN_DEPENDS rospy turtlesim std_srvs message_runtime
 #  DEPENDS system_lib
 )
 
