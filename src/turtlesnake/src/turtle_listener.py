@@ -5,7 +5,7 @@ import math
 import tf
 import geometry_msgs.msg
 import turtlesim.srv
-from std_srvs.srv import Empty
+from turtlesnake.srv import SpawnTurtle
 
 
 class TurtleListenerNode:
@@ -17,7 +17,7 @@ class TurtleListenerNode:
 		rospy.loginfo("Starting turtle listener node.")
 
 		# Advertise the service start turtlesim
-		rospy.Service('/start_turtlesim_snake', Empty, self.start_turtlesim_snake)
+		rospy.Service('/start_turtlesim_snake', SpawnTurtle, self.start_turtlesim_snake)
 
 		# Init some variables for the second turtle
 		# Flag to know if the other turtle is following
@@ -27,7 +27,6 @@ class TurtleListenerNode:
 		self.listener = None
 		self.turtle_vel = None
 		self.rate = rospy.Rate(10)
-
 
 	def run(self):
 		while not rospy.is_shutdown():
@@ -61,12 +60,12 @@ class TurtleListenerNode:
 		rospy.loginfo("Spawning new turtle.")
 		rospy.wait_for_service('spawn')
 		spawner = rospy.ServiceProxy('spawn', turtlesim.srv.Spawn)
-		spawner(4, 2, 0, 'turtle2')
+		spawner(req.x, req.y, req.theta, 'turtle2')
 
 		self.turtle_vel = rospy.Publisher('turtle2/cmd_vel', geometry_msgs.msg.Twist, queue_size=1)
 
 		self.turtlesim_snake = True
-		return []
+		return True
 
 
 def main():
