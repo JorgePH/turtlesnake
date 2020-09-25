@@ -79,3 +79,23 @@ En la siguiente imagen se puede ver un ejemplo de los nodos activos y sus topics
 <p align="center">
   <img src="https://github.com/JorgePH/turtlesnake/blob/master/images/rosgraph_v3.0.svg" width="800">
 </p>
+### V4.0
+
+Para esta versión he implementado una recogida automática de las tortugas. Como ir hacia la nueva tortuga según se spawneaba era trivial usando tf, lo que he pensado ha sido en generar desde el principio un número alto de tortugas (30). Un nodo planner identifica donde están y calcula una posible optimización de la trayectoria, con un algoritmo de tipo Closest First.
+
+La ejecución de los nodos está integrada en el nuevo launcher así que no es necesario lanzarlos individualmente:
+
+```
+% En una ventana
+roslaunch turtlesnake turtlesnake_autonomous.launch
+
+% En otra
+rosservice call /start_turtlesim_snake
+
+% Cuando haya generado todas las tortugas
+rosservice call /catchem_all
+```
+
+La tortuga player recogerá todas las tortugas generadas en ese momento.
+
+En mi ordenador a partir de una cola de treinta tortugas empiezan a perderse de vez en cuando, seguramente por la cantidad de nodos corriendo.
