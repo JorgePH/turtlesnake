@@ -9,6 +9,7 @@ project(turtlesnake)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  roscpp
   turtlesim
   message_generation
   std_srvs
@@ -151,6 +152,10 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+add_executable(teleop_turtlesnake_key cpp/teleop_turtlesnake_key.cpp)
+target_link_libraries(teleop_turtlesnake_key ${catkin_LIBRARIES})
+add_dependencies(teleop_turtlesnake_key ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 #############
 ## Install ##
 #############
@@ -192,6 +197,9 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+
+install(TARGETS teleop_turtlesnake_key
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 #############
 ## Testing ##
