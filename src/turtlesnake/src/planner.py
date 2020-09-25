@@ -31,15 +31,18 @@ class Target:
 class Planner:
     catching_distance = 0.5
     maximum_turtles = 30
+
     def __init__(self):
         self.targets = []
         self.player_position = Point()
 
         rospy.init_node('planner')
+
         # Create 10 turtles
         for i in range(self.maximum_turtles):
             new_target = Target('turtle' + str(i+2))
             self.targets.append(new_target)
+
         # Subscriber to the player position
         rospy.Subscriber('/%s/pose' % 'turtle1', turtlesim.msg.Pose, self.handle_turtle_pose)
 
@@ -53,6 +56,8 @@ class Planner:
         self.rate = rospy.Rate(10)
         rospy.spin()
 
+    # Called by the service. Gets a trajectory of points using some optimization function.
+    # Follows the trajectory
     def catch_them_all(self, req):
         trajectory = self.get_closest_trajectory()
         while trajectory:
@@ -65,11 +70,12 @@ class Planner:
                 self.go_to_service(trajectory[0].x, trajectory[0].y)
             self.rate.sleep()
 
+    # Trajectory calculator. Uses a Closest First algorithm
     def get_closest_trajectory(self):
         trajectory_points = [self.player_position]
         while self.targets:
             rospy.logdebug(str(len(self.targets)) + ' targets left.')
-            # Higher value than possible
+            # Get index of the remaining closest point to the latest of the trajectory
             index = min(range(len(self.targets)), key=lambda i: trajectory_points[-1].distance_to_point(self.targets[i].position))
             trajectory_points.append(self.targets[index].position)
             self.targets.pop(index)

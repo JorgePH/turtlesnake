@@ -9,9 +9,13 @@ from turtlesnake.srv import GoTo
 
 
 class PlayerController():
-    # Interval to accept the current orientation
+    """
+    Class of the player controller
+    """
+    # Tolerance values
     orientation_deviation = 0.2
     distance_deviation = 0.2
+    # Speeds
     linear_speed = 1
     angular_speed = 4
 
@@ -42,6 +46,7 @@ class PlayerController():
             self.update_velocities()
             self.rate.sleep()
 
+    # Calculates if the target is close enough, if not, assigns velocities
     def update_velocities(self):
         if self.going:
             self.target_theta = math.atan2(self.target_y - self.current_y, self.target_x - self.current_x)
