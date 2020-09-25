@@ -51,6 +51,9 @@ class Turtle:
         launch.start()
         launch.launch(node)
 
+    def set_parent(self, parent):
+        self.parent = parent
+
 
 class TurtleListenerNode:
     """
@@ -61,6 +64,8 @@ class TurtleListenerNode:
     following_distance = 0.5
     # Linear speed of followers
     following_speed = 2
+    # Number of spawning turtles
+    turtle_number = 10
 
     def __init__(self):
         rospy.init_node('turtle_tf_listener')
@@ -73,6 +78,8 @@ class TurtleListenerNode:
         self.playing_turtlesnake = False
         # List with all the turtles of the body, player not included
         self.turtles = []
+        # List with the following turtles
+        self.following_turtles = []
 
         self.rate = rospy.Rate(10)
 
@@ -86,11 +93,16 @@ class TurtleListenerNode:
             if self.playing_turtlesnake is True:
                 rospy.logdebug_once("Turtlesnake running.")
 
-                # If there isn't any turtles create one and add it to the list, with the head as a parent
+                # Spawn all the turtles in the beginning
                 if not self.turtles:
                     rospy.logdebug("Turtle list empty.")
+                    # First turtle of body
                     new_turtle = Turtle('turtle2', '/turtle1')
                     self.turtles.append(new_turtle)
+                    # Rest
+                    for i in range(self.turtle_number-1):
+                        new_turtle = Turtle('turtle' + str(len(self.turtles) + 2), self.turtles[-1].name)
+                        self.turtles.append(new_turtle)
 
                 # If every turtle is following create a new one
                 if all(turtle.following is True for turtle in self.turtles):
@@ -109,6 +121,13 @@ class TurtleListenerNode:
                         if math.sqrt(trans[0] ** 2 + trans[1] ** 2) < self.following_distance:
                             rospy.loginfo("New turtle follows.")
                             turtle.following = True
+                            # Follow the head or the previous turtle
+                            if not self.following_turtles:
+                                turtle.set_parent('/turtle1')
+                            else:
+                                turtle.set_parent(self.following_turtles[-1])
+
+                            self.following_turtles.append('/' + turtle.name)
 
                     # If following get tf respect the previous turtle and follow
                     if turtle.following is True:
