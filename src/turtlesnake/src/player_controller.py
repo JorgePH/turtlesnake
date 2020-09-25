@@ -19,11 +19,13 @@ class PlayerController():
         self.current_x = 0
         self.current_y = 0
         self.current_theta = 0
-        self.target_x = 0
-        self.target_y = 0
+        self.target_x = 5
+        self.target_y = 5
         self.target_theta = 0
         self.vel_x = 0
         self.vel_theta = 0
+
+        self.going = False
 
         rospy.init_node('player_controller')
         self.turtlename = rospy.get_param('~turtle')
@@ -41,28 +43,30 @@ class PlayerController():
             self.rate.sleep()
 
     def update_velocities(self):
-        self.target_theta = math.atan2(self.target_y - self.current_y, self.target_x - self.current_x)
-        orientation_difference = self.target_theta - self.current_theta
-        linear_distance = math.sqrt((self.target_x - self.current_x) ** 2 + (self.target_y - self.current_y) ** 2)
-        rospy.logdebug('Target theta: ' + str(self.target_theta))
-        rospy.logdebug('Orientation difference: ' + str(orientation_difference))
+        if self.going:
+            self.target_theta = math.atan2(self.target_y - self.current_y, self.target_x - self.current_x)
+            orientation_difference = self.target_theta - self.current_theta
+            linear_distance = math.sqrt((self.target_x - self.current_x) ** 2 + (self.target_y - self.current_y) ** 2)
+            rospy.logdebug('Target theta: ' + str(self.target_theta))
+            rospy.logdebug('Orientation difference: ' + str(orientation_difference))
 
-        if linear_distance > self.distance_deviation:
-            # Orientate the turtle first
-            if abs(orientation_difference) > self.orientation_deviation:
-                self.vel_x = 0
-                self.vel_theta = self.angular_speed * orientation_difference
+            if linear_distance > self.distance_deviation:
+                # Orientate the turtle first
+                if abs(orientation_difference) > self.orientation_deviation:
+                    self.vel_x = 0
+                    self.vel_theta = self.angular_speed * orientation_difference
+                else:
+                    self.vel_theta = 0
+                    self.vel_x = self.linear_speed * linear_distance
             else:
+                self.vel_x = 0
                 self.vel_theta = 0
-                self.vel_x = self.linear_speed * linear_distance
-        else:
-            self.vel_x = 0
-            self.vel_theta = 0
+                self.going = False
 
-        cmd = geometry_msgs.msg.Twist()
-        cmd.linear.x = self.vel_x
-        cmd.angular.z = self.vel_theta
-        self.player_vel_topic.publish(cmd)
+            cmd = geometry_msgs.msg.Twist()
+            cmd.linear.x = self.vel_x
+            cmd.angular.z = self.vel_theta
+            self.player_vel_topic.publish(cmd)
 
     def handle_turtle_pose(self, msg):
         self.current_x = msg.x
@@ -72,6 +76,7 @@ class PlayerController():
     def go_to_position(self, req):
         self.target_x = req.x
         self.target_y = req.y
+        self.going = True
 
         return True
 
