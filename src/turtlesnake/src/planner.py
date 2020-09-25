@@ -65,7 +65,7 @@ class Planner:
             if self.player_position.distance_to_point(trajectory[0]) < self.catching_distance:
                 trajectory.pop(0)
                 if not trajectory:
-                    return True
+                    return []
                 rospy.logdebug('Go to ' + str(trajectory[0].x) + ' ' + str(trajectory[0].y))
                 self.go_to_service(trajectory[0].x, trajectory[0].y)
             self.rate.sleep()
