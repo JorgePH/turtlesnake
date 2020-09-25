@@ -65,7 +65,7 @@ class TurtleListenerNode:
     # Linear speed of followers
     following_speed = 2
     # Number of spawning turtles
-    turtle_number = 10
+    turtle_number = 30
 
     def __init__(self):
         rospy.init_node('turtle_tf_listener')
